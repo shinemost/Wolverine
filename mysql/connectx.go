@@ -112,3 +112,17 @@ func InsertMoreUsersX(users []domain.SysUserInfo) error {
 	_, err := db.NamedExec("INSERT INTO sys_user(user_name,login_name) VALUES (:user_name, :login_name)", users)
 	return err
 }
+
+func SearchByIDsX(ids []int) (users []domain.SysUserInfo, err error) {
+	//把id 填到sql语句中
+	query, args, err := sqlx.In("SELECT user_name, login_name FROM sys_user WHERE user_id IN (?)", ids)
+	if err != nil {
+		return
+	}
+	// sqlx.In 返回带 `?` 的查询语句, 记得要用rebind 重新绑定下
+	query = db.Rebind(query)
+
+	err = db.Select(&users, query, args...)
+	fmt.Println(users)
+	return
+}

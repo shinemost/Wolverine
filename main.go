@@ -1,7 +1,6 @@
 package main
 
 import (
-	"hjfu/Wolverine/domain"
 	"hjfu/Wolverine/mysql"
 )
 
@@ -32,21 +31,22 @@ func main() {
 	mysql.InitMysqlX()
 	// mysql.BetterInsert()
 
-	users := []domain.SysUserInfo{
-		{
-			UserName:  "蔡建军",
-			LoginName: "jjcai5",
-		},
-		{
-			UserName:  "陈霄峰",
-			LoginName: "xfchen8",
-		},
-		{
-			UserName:  "秦坤",
-			LoginName: "kunqin",
-		},
-	}
-	mysql.InsertMoreUsersX(users)
+	// users := []domain.SysUserInfo{
+	// 	{
+	// 		UserName:  "蔡建军",
+	// 		LoginName: "jjcai5",
+	// 	},
+	// 	{
+	// 		UserName:  "陈霄峰",
+	// 		LoginName: "xfchen8",
+	// 	},
+	// 	{
+	// 		UserName:  "秦坤",
+	// 		LoginName: "kunqin",
+	// 	},
+	// }
+	// mysql.InsertMoreUsersX(users)
+	mysql.SearchByIDsX([]int{1, 105, 106})
 
 	// if err != nil {
 	// 	panic(err)
