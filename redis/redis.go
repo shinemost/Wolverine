@@ -43,3 +43,45 @@ func RedisDemo() {
 	}
 
 }
+
+func RedisDemo2() {
+	zsetkey := "language_rank"
+	languages := []redis.Z{
+		{Score: 90, Member: "java"},
+		{Score: 80, Member: "go"},
+		{Score: 70, Member: "js"},
+		{Score: 60, Member: "rust"},
+		{Score: 50, Member: "c++"},
+	}
+
+	num, err := rdb.ZAdd(zsetkey, languages...).Result()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("num:", num)
+	// 增加值
+	newScore, err := rdb.ZIncrBy(zsetkey, 10, "go").Result()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("newScore:", newScore)
+
+	// 取分数最高的3个
+	ret := rdb.ZRevRangeWithScores(zsetkey, 0, 2).Val()
+	for _, z := range ret {
+		fmt.Println("name:", z.Member,
+			"  score:", z.Score)
+	}
+
+	// 取分数在一定范围之内的
+	op := redis.ZRangeBy{
+		Min: "80",
+		Max: "110",
+	}
+
+	ret = rdb.ZRangeByScoreWithScores(zsetkey, op).Val()
+	for _, z := range ret {
+		fmt.Println(z.Member, "  ", z.Score)
+	}
+
+}

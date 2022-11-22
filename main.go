@@ -1,7 +1,6 @@
 package main
 
 import (
-	"hjfu/Wolverine/mysql"
 	"hjfu/Wolverine/redis"
 )
 
@@ -29,7 +28,7 @@ func main() {
 	// fmt.Println("---------------------")
 	// fmt.Println(ls)
 
-	mysql.InitMysqlX()
+	// mysql.InitMysqlX()
 	// mysql.BetterInsert()
 
 	// users := []domain.SysUserInfo{
@@ -49,7 +48,7 @@ func main() {
 	// mysql.InsertMoreUsersX(users)
 	// mysql.SearchByIDsX([]int{1, 105, 106})']
 	redis.InitClient()
-	redis.RedisDemo()
+	redis.RedisDemo2()
 
 	// if err != nil {
 	// 	panic(err)
