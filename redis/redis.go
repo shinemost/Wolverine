@@ -2,6 +2,7 @@ package redis
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/go-redis/redis"
 )
@@ -84,4 +85,26 @@ func RedisDemo2() {
 		fmt.Println(z.Member, "  ", z.Score)
 	}
 
+}
+
+func WatchDemo() {
+	key := "watch_count"
+	err := rdb.Watch(func(tx *redis.Tx) error {
+		n, err := tx.Get(key).Int64()
+		if err != nil && err != redis.Nil {
+			return err
+		}
+		_, err = tx.TxPipelined(func(pipeliner redis.Pipeliner) error {
+			time.Sleep(20 * time.Second)
+			pipeliner.Set(key, n+1, 0)
+			return nil
+		})
+		return err
+	}, key)
+
+	if err != nil {
+		fmt.Println("tx exec failed:", err)
+		return
+	}
+	fmt.Println("tx exec success")
 }
