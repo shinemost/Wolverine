@@ -1,6 +1,10 @@
 package main
 
-import "hjfu/Wolverine/loggers"
+import (
+	"fmt"
+
+	"github.com/spf13/viper"
+)
 
 //func main() {
 
@@ -65,6 +69,27 @@ import "hjfu/Wolverine/loggers"
 //}
 
 func main() {
-	loggers.MainMethod()
+	// loggers.MainMethod()
+	viper.Set("fileDr", "./")
+	viper.SetConfigName("config")
+	viper.SetConfigType("json")
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(viper.Get("name"))
+
+	// viper.Set("age", "181")
+	// viper.WriteConfigAs("config.json")
+	// viper.WatchConfig()
+	// viper.OnConfigChange(func(in fsnotify.Event) {
+	// 	fmt.Println("config changed", in.Name)
+	// })
+
+	if !viper.IsSet("house") {
+		fmt.Println("no house key")
+	}
+	fmt.Println(viper.Get("address.loaction"))
 
 }
