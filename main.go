@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"hjfu/Wolverine/domain"
 
 	"github.com/spf13/viper"
 )
@@ -90,6 +91,10 @@ func main() {
 	if !viper.IsSet("house") {
 		fmt.Println("no house key")
 	}
-	fmt.Println(viper.Get("address.loaction"))
+	// fmt.Println(viper.Get("address.loaction"))
+
+	var config domain.Config2
+	viper.Unmarshal(&config)
+	fmt.Println(config)
 
 }
