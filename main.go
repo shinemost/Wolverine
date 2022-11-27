@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"hjfu/Wolverine/domain"
+	"hjfu/Wolverine/route"
+	"hjfu/Wolverine/setting"
 
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
 //func main() {
@@ -69,32 +71,68 @@ import (
 
 //}
 
+// func main() {
+// 	// loggers.MainMethod()
+// 	viper.Set("fileDr", "./")
+// 	viper.SetConfigName("config")
+// 	viper.SetConfigType("json")
+// 	viper.AddConfigPath(".")
+// 	err := viper.ReadInConfig()
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	fmt.Println(viper.Get("name"))
+
+// 	// viper.Set("age", "181")
+// 	// viper.WriteConfigAs("config.json")
+// 	// viper.WatchConfig()
+// 	// viper.OnConfigChange(func(in fsnotify.Event) {
+// 	// 	fmt.Println("config changed", in.Name)
+// 	// })
+
+// 	if !viper.IsSet("house") {
+// 		fmt.Println("no house key")
+// 	}
+// 	// fmt.Println(viper.Get("address.loaction"))
+
+// 	var config domain.Config2
+// 	viper.Unmarshal(&config)
+// 	fmt.Println(config)
+
+// }
+
 func main() {
-	// loggers.MainMethod()
-	viper.Set("fileDr", "./")
-	viper.SetConfigName("config")
-	viper.SetConfigType("json")
-	viper.AddConfigPath(".")
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
+	// 加载配置文件
+	if err := setting.InitConfig(); err != nil {
+		fmt.Printf("init settings failed:%s \n", err)
+		return
 	}
-	fmt.Println(viper.Get("name"))
-
-	// viper.Set("age", "181")
-	// viper.WriteConfigAs("config.json")
-	// viper.WatchConfig()
-	// viper.OnConfigChange(func(in fsnotify.Event) {
-	// 	fmt.Println("config changed", in.Name)
-	// })
-
-	if !viper.IsSet("house") {
-		fmt.Println("no house key")
+	// 初始化日志
+	if err := setting.InitLogger(); err != nil {
+		fmt.Printf("init settings failed:%s \n", err)
+		return
 	}
-	// fmt.Println(viper.Get("address.loaction"))
+	zap.L().Debug("logger init success")
+	defer zap.L().Sync()
+	// 不要遗漏2个 db的close
+	// defer setting.Db.Close()
+	// defer setting.Rdb.Close()
+	// 初始化mysql
+	if err := setting.InitMysql(); err != nil {
+		fmt.Printf("init mysql failed:%s \n", err)
+		return
+	}
+	zap.L().Debug("mysql init success")
+	// 初始化redis
+	if err := setting.InitRedis(); err != nil {
+		fmt.Printf("init redis failed:%s \n", err)
+		return
+	}
+	zap.L().Debug("redis init success")
+	// 注册路由
+	r := route.Setup()
+	r.Run(":%d", viper.GetString("app.port"))
 
-	var config domain.Config2
-	viper.Unmarshal(&config)
-	fmt.Println(config)
+	// 启动服务 （优雅关机）
 
 }

@@ -1,0 +1,21 @@
+{"level":"DEBUG","time":"2022-11-27T21:32:47.243+0800","caller":"Wolverine/main.go:114","msg":"logger init success"}
+{"level":"DEBUG","time":"2022-11-27T21:32:47.460+0800","caller":"Wolverine/main.go:124","msg":"mysql init success"}
+{"level":"DEBUG","time":"2022-11-27T21:32:47.492+0800","caller":"Wolverine/main.go:130","msg":"redis init success"}
+{"level":"DEBUG","time":"2022-11-27T21:34:25.795+0800","caller":"Wolverine/main.go:114","msg":"logger init success"}
+{"level":"DEBUG","time":"2022-11-27T21:34:25.808+0800","caller":"Wolverine/main.go:124","msg":"mysql init success"}
+{"level":"DEBUG","time":"2022-11-27T21:34:25.812+0800","caller":"Wolverine/main.go:130","msg":"redis init success"}
+{"level":"DEBUG","time":"2022-11-27T21:38:17.408+0800","caller":"Wolverine/main.go:114","msg":"logger init success"}
+{"level":"DEBUG","time":"2022-11-27T21:38:17.419+0800","caller":"Wolverine/main.go:124","msg":"mysql init success"}
+{"level":"DEBUG","time":"2022-11-27T21:38:17.421+0800","caller":"Wolverine/main.go:130","msg":"redis init success"}
+{"level":"DEBUG","time":"2022-11-27T21:38:31.174+0800","caller":"Wolverine/main.go:114","msg":"logger init success"}
+{"level":"DEBUG","time":"2022-11-27T21:38:31.183+0800","caller":"Wolverine/main.go:124","msg":"mysql init success"}
+{"level":"DEBUG","time":"2022-11-27T21:38:31.192+0800","caller":"Wolverine/main.go:130","msg":"redis init success"}
+{"level":"DEBUG","time":"2022-11-27T21:39:51.686+0800","caller":"Wolverine/main.go:114","msg":"logger init success"}
+{"level":"DEBUG","time":"2022-11-27T21:39:51.691+0800","caller":"Wolverine/main.go:124","msg":"mysql init success"}
+{"level":"DEBUG","time":"2022-11-27T21:39:51.694+0800","caller":"Wolverine/main.go:130","msg":"redis init success"}
+{"level":"INFO","time":"2022-11-27T21:40:05.180+0800","caller":"setting/loggers.go:74","msg":"/","status":200,"method":"GET","path":"/","query":"","ip":"127.0.0.1","user_agent":"curl/7.74.0","errors":"","cost":0.0000204}
+{"level":"INFO","time":"2022-11-27T21:41:34.775+0800","caller":"setting/loggers.go:74","msg":"/","status":200,"method":"GET","path":"/","query":"","ip":"127.0.0.1","user_agent":"PostmanRuntime/7.29.2","errors":"","cost":0.0000297}
+{"level":"DEBUG","time":"2022-11-27T21:42:09.255+0800","caller":"Wolverine/main.go:114","msg":"logger init success"}
+{"level":"DEBUG","time":"2022-11-27T21:45:58.331+0800","caller":"Wolverine/main.go:115","msg":"logger init success"}
+{"level":"DEBUG","time":"2022-11-27T21:45:58.341+0800","caller":"Wolverine/main.go:125","msg":"mysql init success"}
+{"level":"DEBUG","time":"2022-11-27T21:45:58.348+0800","caller":"Wolverine/main.go:131","msg":"redis init success"}
