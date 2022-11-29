@@ -1,2 +1,0 @@
-{"level":"error","ts":"2022-11-25T22:12:45.276+0800","caller":"loggers/loggers.go:55","msg":"Error fetching url..","url":"https://www.baidu.com","error":"Get \"https://www.baidu.com\": net/http: TLS handshake timeout"}
-{"level":"info","ts":"2022-11-25T22:12:47.537+0800","caller":"loggers/loggers.go:57","msg":"Success..","statusCode":"200 OK","url":"https://www.google.com"}
