@@ -131,7 +131,7 @@ func main() {
 	zap.L().Debug("redis init success")
 	// 注册路由
 	r := route.Setup()
-	r.Run(":%d", viper.GetString("app.port"))
+	r.Run(fmt.Sprintf(":%d", viper.GetInt("app.port")))
 
 	// 启动服务 （优雅关机）
 
