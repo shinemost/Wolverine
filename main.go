@@ -123,13 +123,13 @@ func main() {
 	defer zap.L().Sync()
 
 	// 初始化mysql
-	if err := setting.InitMysql(); err != nil {
+	if err := setting.InitMysql(setting.Config.MysqlConfig); err != nil {
 		fmt.Printf("init mysql failed:%s \n", err)
 		return
 	}
 	zap.L().Debug("mysql init success")
 	// 初始化redis
-	if err := setting.InitRedis(); err != nil {
+	if err := setting.InitRedis(setting.Config.RedisConfig); err != nil {
 		fmt.Printf("init redis failed:%s \n", err)
 		return
 	}
