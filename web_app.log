@@ -19,3 +19,13 @@
 {"level":"DEBUG","time":"2022-11-27T21:45:58.331+0800","caller":"Wolverine/main.go:115","msg":"logger init success"}
 {"level":"DEBUG","time":"2022-11-27T21:45:58.341+0800","caller":"Wolverine/main.go:125","msg":"mysql init success"}
 {"level":"DEBUG","time":"2022-11-27T21:45:58.348+0800","caller":"Wolverine/main.go:131","msg":"redis init success"}
+{"level":"DEBUG","time":"2022-11-29T22:05:38.814+0800","caller":"Wolverine/main.go:122","msg":"logger init success"}
+{"level":"DEBUG","time":"2022-11-29T22:05:38.821+0800","caller":"Wolverine/main.go:132","msg":"mysql init success"}
+{"level":"DEBUG","time":"2022-11-29T22:05:38.824+0800","caller":"Wolverine/main.go:138","msg":"redis init success"}
+{"level":"INFO","time":"2022-11-29T22:05:46.172+0800","caller":"Wolverine/main.go:166","msg":"Shutdown server"}
+{"level":"INFO","time":"2022-11-29T22:05:46.174+0800","caller":"Wolverine/main.go:175","msg":"Server exiting"}
+{"level":"DEBUG","time":"2022-11-29T22:09:28.342+0800","caller":"Wolverine/main.go:122","msg":"logger init success"}
+{"level":"DEBUG","time":"2022-11-29T22:09:28.348+0800","caller":"Wolverine/main.go:130","msg":"mysql init success"}
+{"level":"DEBUG","time":"2022-11-29T22:09:28.350+0800","caller":"Wolverine/main.go:136","msg":"redis init success"}
+{"level":"INFO","time":"2022-11-29T22:09:36.500+0800","caller":"Wolverine/main.go:169","msg":"Shutdown server"}
+{"level":"INFO","time":"2022-11-29T22:09:36.502+0800","caller":"Wolverine/main.go:178","msg":"Server exiting"}
