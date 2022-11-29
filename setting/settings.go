@@ -10,12 +10,17 @@ import (
 
 var Config = new(domain.AppConfig)
 
-func InitConfig() error {
+func InitConfig(filePath string) error {
 
-	viper.AddConfigPath(".")
+	// 如果设置filepath就直接使用 否则用当前目录的
+	if len(filePath) == 0 {
+		viper.AddConfigPath(".")
 
-	viper.SetConfigName("configs")
-	viper.SetConfigType("yaml")
+		viper.SetConfigName("configs")
+		viper.SetConfigType("yaml")
+	} else {
+		viper.SetConfigFile(filePath)
+	}
 
 	err := viper.ReadInConfig()
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"hjfu/Wolverine/route"
 	"hjfu/Wolverine/setting"
@@ -109,8 +110,16 @@ import (
 // }
 
 func main() {
+	filePath := ""
+	// if len(os.Args) >= 2 {
+	// 	filePath = os.Args[1]
+	// }
+	// 第二个参数 就是命令行的-x  第三个是默认值 第四个是-h的时候的说明
+	flag.StringVar(&filePath, "file", "", "配置文件地址")
+	flag.Parse()
+
 	// 加载配置文件
-	if err := setting.InitConfig(); err != nil {
+	if err := setting.InitConfig(filePath); err != nil {
 		fmt.Printf("init settings failed:%s \n", err)
 		return
 	}
