@@ -4,8 +4,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/spf13/viper"
-	"go.uber.org/zap"
+	"hjfu/Wolverine/controllers"
+	"hjfu/Wolverine/dao/mysql"
+	"hjfu/Wolverine/dao/redis"
+	"hjfu/Wolverine/logger"
+	"hjfu/Wolverine/pkg/snowflake"
 	"hjfu/Wolverine/route"
 	"hjfu/Wolverine/setting"
 	"log"
@@ -14,6 +17,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -28,7 +33,7 @@ func main() {
 		return
 	}
 	// 初始化日志
-	if err := setting.InitLogger(); err != nil {
+	if err := logger.Init(); err != nil {
 		fmt.Printf("init settings failed:%s \n", err)
 		return
 	}
@@ -36,21 +41,32 @@ func main() {
 	defer zap.L().Sync()
 
 	// 初始化mysql
-	if err := setting.InitMysql(setting.Config.MysqlConfig); err != nil {
+	if err := mysql.Init(setting.Config.MysqlConfig); err != nil {
 		fmt.Printf("init mysql failed:%s \n", err)
 		return
 	}
 	zap.L().Debug("mysql init success")
 	// 初始化redis
-	if err := setting.InitRedis(setting.Config.RedisConfig); err != nil {
+	if err := redis.Init(setting.Config.RedisConfig); err != nil {
 		fmt.Printf("init redis failed:%s \n", err)
 		return
 	}
 	zap.L().Debug("redis init success")
 
+	if err := snowflake.Init(setting.Config.StartTime, setting.Config.MachineId); err != nil {
+		fmt.Printf("init snowflake node failed:%s \n", err)
+		return
+	}
+
 	// 不要遗漏2个 db的close
-	defer setting.CloseMysql()
-	defer setting.CloseRedis()
+	defer mysql.Close()
+	defer redis.Close()
+
+	// 初始化validator的 trans为中文
+	if err := controllers.InitTrans("zh"); err != nil {
+		fmt.Printf("init translation  failed:%s \n", err)
+		return
+	}
 
 	// 注册路由
 	r := route.Setup()
@@ -59,7 +75,7 @@ func main() {
 	// 启动服务 （优雅关机）
 
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%d", viper.GetInt("app.port")),
+		Addr:    fmt.Sprintf(":%d", setting.Config.Port),
 		Handler: r,
 	}
 

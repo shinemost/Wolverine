@@ -1,7 +1,8 @@
-app:
-  name: 'web_app'
-  mode: 'dev'
-  port: 8071
+name: 'web_app'
+mode: 'dev'
+port: 8071
+start_time: '2022-11-30'
+machineID: 1
 log:
   level: 'debug'
   filename: 'web_app.log'

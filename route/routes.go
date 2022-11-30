@@ -2,7 +2,7 @@ package route
 
 import (
 	"hjfu/Wolverine/controllers"
-	"hjfu/Wolverine/setting"
+	"hjfu/Wolverine/logger"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +10,7 @@ import (
 
 func Setup() *gin.Engine {
 	r := gin.New()
-	r.Use(setting.GinLogger(), setting.GinRecovery(true))
+	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 	//注册
 	r.POST("/register", controllers.RegisterHandler)
 	r.GET("/", func(ctx *gin.Context) {

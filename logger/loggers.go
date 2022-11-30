@@ -1,4 +1,4 @@
-package setting
+package logger
 
 import (
 	"net"
@@ -18,7 +18,7 @@ import (
 
 var lg *zap.Logger
 
-func InitLogger() error {
+func Init() error {
 	writeSyncer := getLogWriter(viper.GetString("log.filename"),
 		viper.GetInt("log.max_size"),
 		viper.GetInt("log.max_backups"),

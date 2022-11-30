@@ -1,4 +1,4 @@
-package setting
+package mysql
 
 import (
 	"fmt"
@@ -12,11 +12,11 @@ import (
 
 var db *sqlx.DB
 
-func CloseMysql() {
+func Close() {
 	_ = db.Close()
 }
 
-func InitMysql(config *domain.MysqlConfig) (err error) {
+func Init(config *domain.MysqlConfig) (err error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True",
 		config.User, config.Password,
 		config.Host, config.Port,

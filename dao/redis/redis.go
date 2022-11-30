@@ -1,4 +1,4 @@
-package setting
+package redis
 
 import (
 	"fmt"
@@ -9,11 +9,11 @@ import (
 
 var rdb *redis.Client
 
-func CloseRedis() {
+func Close() {
 	_ = rdb.Close()
 }
 
-func InitRedis(config *domain.RedisConfig) (err error) {
+func Init(config *domain.RedisConfig) (err error) {
 	rdb = redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%d", config.Host, config.Post),
 		Password: config.Password,
