@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"errors"
+	"hjfu/Wolverine/dao/mysql"
 	"hjfu/Wolverine/logic"
 	"hjfu/Wolverine/models"
-	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -20,25 +21,25 @@ func RegisterHandler(c *gin.Context) {
 		errs, ok := err.(validator.ValidationErrors)
 
 		if !ok {
-			c.JSON(http.StatusOK, gin.H{
-				"msg": err.Error(),
-			})
+			ResponseError(c, CodeInvalidParam)
 		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"msg": removeTopStruct(errs.Translate(trans)),
-			})
+			ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
 		}
 		return
 	}
 
+	// 业务处理
 	err := logic.Register(p)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"msg": err.Error(),
-		})
+		zap.L().Error("register failed", zap.String("username", p.UserName), zap.Error(err))
+		if errors.Is(err, mysql.UserAleadyExists) {
+			ResponseError(c, CodeUserExist)
+		} else {
+			ResponseError(c, CodeInvalidParam)
+		}
 		return
 	}
-	c.JSON(http.StatusOK, "注册成功")
+	ResponseSuccess(c, "注册成功")
 }
 
 func LoginHandler(c *gin.Context) {
@@ -50,13 +51,9 @@ func LoginHandler(c *gin.Context) {
 		errs, ok := err.(validator.ValidationErrors)
 
 		if !ok {
-			c.JSON(http.StatusOK, gin.H{
-				"msg": err.Error(),
-			})
+			ResponseError(c, CodeInvalidParam)
 		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"msg": removeTopStruct(errs.Translate(trans)),
-			})
+			ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
 		}
 		return
 	}
@@ -65,12 +62,14 @@ func LoginHandler(c *gin.Context) {
 	if err != nil {
 		// 可以在日志中 看出 到底是哪些用户一直在尝试登录
 		zap.L().Error("login failed", zap.String("username", p.UserName), zap.Error(err))
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "用户名或密码不正确",
-		})
+		if errors.Is(err, mysql.WrongPassword) {
+			ResponseError(c, CodeInvalidPassword)
+		} else {
+			ResponseError(c, CodeServerBusy)
+		}
 		return
 	}
-	c.JSON(http.StatusOK, "登录成功")
+	ResponseSuccess(c, "登录成功")
 }
 
 // 去除报错信息中的结构体信息
