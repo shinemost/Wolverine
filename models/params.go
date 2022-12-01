@@ -7,6 +7,11 @@ type ParamRegister struct {
 	RePassword string `json:"re_password" binding:"required,eqfield=Password"`
 }
 
+type ParamLogin struct {
+	UserName string `json:"username" binding:"required"`
+	Password string `json:"password" binging:"required"`
+}
+
 type User struct {
 	UserId   int64  `db:"user_id"`
 	Username string `db:"username"`

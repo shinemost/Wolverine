@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"crypto/md5"
+	"database/sql"
 	"encoding/hex"
 	"errors"
 	"hjfu/Wolverine/models"
@@ -45,4 +46,20 @@ func encryptPassword(password string) string {
 	h := md5.New()
 	h.Write([]byte(serect))
 	return hex.EncodeToString(h.Sum([]byte(password)))
+}
+
+func Login(user *models.User) error {
+	oldPassword := user.Password
+	sqlStr := `select user_id,username,password from user where username=?`
+	err := db.Get(user, sqlStr, user.Username)
+	if err == sql.ErrNoRows {
+		return errors.New("该用户不存在")
+	}
+	if err != nil {
+		return err
+	}
+	if encryptPassword(oldPassword) != user.Password {
+		return errors.New("密码不正确")
+	}
+	return nil
 }

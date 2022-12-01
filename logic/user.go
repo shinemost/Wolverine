@@ -30,3 +30,13 @@ func Register(register *models.ParamRegister) (err error) {
 	return
 
 }
+
+func Login(login *models.ParamLogin) (err error) {
+
+	user := models.User{
+		Username: login.UserName,
+		Password: login.Password,
+	}
+	return mysql.Login(&user)
+
+}
