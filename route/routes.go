@@ -3,6 +3,7 @@ package route
 import (
 	"hjfu/Wolverine/controllers"
 	"hjfu/Wolverine/logger"
+	"hjfu/Wolverine/middleware"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,7 @@ func Setup() *gin.Engine {
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "ok")
 	})
-	r.GET("/ping", controllers.PingHandler)
+	r.GET("/ping", middleware.JWTAuthMiddleWare(), controllers.PingHandler)
 
 	return r
 }

@@ -5,7 +5,6 @@ import (
 	"hjfu/Wolverine/dao/mysql"
 	"hjfu/Wolverine/logic"
 	"hjfu/Wolverine/models"
-	"hjfu/Wolverine/pkg/jwt"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -85,17 +84,7 @@ func removeTopStruct(fields map[string]string) map[string]string {
 
 func PingHandler(c *gin.Context) {
 	// 这里post man 模拟的 将token auth-token
-	token := c.Request.Header.Get("auth-token")
-	if token == "" {
-		ResponseError(c, CodeTokenIsEmpty)
-		return
-	}
-	parseToken, err := jwt.ParseToken(token)
-	if err != nil {
-		ResponseError(c, CodeTokenInvalid)
-		return
-	}
-
-	zap.L().Debug("token parese", zap.String("username", parseToken.UserName))
+	zap.L().Debug("ping", zap.String("ping-username", c.GetString("username")))
 	ResponseSuccess(c, "pong")
+
 }
