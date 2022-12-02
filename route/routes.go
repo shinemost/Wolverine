@@ -17,6 +17,7 @@ func Setup() *gin.Engine {
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "ok")
 	})
+	r.GET("/ping", controllers.PingHandler)
 
 	return r
 }

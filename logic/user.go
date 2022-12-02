@@ -3,6 +3,7 @@ package logic
 import (
 	"hjfu/Wolverine/dao/mysql"
 	"hjfu/Wolverine/models"
+	"hjfu/Wolverine/pkg/jwt"
 	"hjfu/Wolverine/pkg/snowflake"
 )
 
@@ -31,12 +32,14 @@ func Register(register *models.ParamRegister) (err error) {
 
 }
 
-func Login(login *models.ParamLogin) (err error) {
+func Login(login *models.ParamLogin) (string, error) {
 
 	user := models.User{
 		Username: login.UserName,
 		Password: login.Password,
 	}
-	return mysql.Login(&user)
-
+	if err := mysql.Login(&user); err != nil {
+		return "", err
+	}
+	return jwt.GenToken(user.Username, user.UserId)
 }

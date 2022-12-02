@@ -5,6 +5,7 @@ import (
 	"hjfu/Wolverine/dao/mysql"
 	"hjfu/Wolverine/logic"
 	"hjfu/Wolverine/models"
+	"hjfu/Wolverine/pkg/jwt"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -58,7 +59,7 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	err := logic.Login(p)
+	token, err := logic.Login(p)
 	if err != nil {
 		// 可以在日志中 看出 到底是哪些用户一直在尝试登录
 		zap.L().Error("login failed", zap.String("username", p.UserName), zap.Error(err))
@@ -69,7 +70,7 @@ func LoginHandler(c *gin.Context) {
 		}
 		return
 	}
-	ResponseSuccess(c, "登录成功")
+	ResponseSuccess(c, token)
 }
 
 // 去除报错信息中的结构体信息
@@ -80,4 +81,21 @@ func removeTopStruct(fields map[string]string) map[string]string {
 		res[field[strings.Index(field, ".")+1:]] = err
 	}
 	return res
+}
+
+func PingHandler(c *gin.Context) {
+	// 这里post man 模拟的 将token auth-token
+	token := c.Request.Header.Get("auth-token")
+	if token == "" {
+		ResponseError(c, CodeTokenIsEmpty)
+		return
+	}
+	parseToken, err := jwt.ParseToken(token)
+	if err != nil {
+		ResponseError(c, CodeTokenInvalid)
+		return
+	}
+
+	zap.L().Debug("token parese", zap.String("username", parseToken.UserName))
+	ResponseSuccess(c, "pong")
 }
