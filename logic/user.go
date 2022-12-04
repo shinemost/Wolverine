@@ -84,3 +84,35 @@ func GetPostById(postId int64) (apiPostDetail *models.ApiPostDetail, err error) 
 	apiPostDetail.Community = community
 	return apiPostDetail, err
 }
+
+func GetPostList(pageSize, pageNum int64) (apiPostDetailList []*models.ApiPostDetail, err error) {
+	var offset int64
+	offset = pageSize * (pageNum - 1)
+	postList, err := mysql.GetPostList(offset, pageSize)
+	if err != nil {
+		return nil, err
+	}
+	apiPostDetailList = make([]*models.ApiPostDetail, 0, 2)
+	for _, post := range postList {
+		//再查 作者 名称
+		username, err := mysql.GetUserNameById(post.AuthorId)
+		if err != nil {
+			zap.L().Warn("no author ")
+			err = nil
+			return nil, err
+		}
+		//再查板块实体
+		community, err := GetCommunityById(post.CommunityId)
+		if err != nil {
+			zap.L().Warn("no community ")
+			err = nil
+			return nil, err
+		}
+		apiPostDetail := new(models.ApiPostDetail)
+		apiPostDetail.AuthorName = username
+		apiPostDetail.Community = community
+		apiPostDetail.Post = post
+		apiPostDetailList = append(apiPostDetailList, apiPostDetail)
+	}
+	return apiPostDetailList, nil
+}

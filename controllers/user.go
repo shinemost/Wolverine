@@ -160,3 +160,32 @@ func PostDetailHandler(c *gin.Context) {
 	}
 	ResponseSuccess(c, data)
 }
+
+func GetPostListHandler(c *gin.Context) {
+	pageSizeStr := c.Query("pageSize")
+	pageNumStr := c.Query("pageNum")
+
+	pageSize, err := strconv.ParseInt(pageSizeStr, 10, 64)
+	if err != nil {
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	pageNum, err := strconv.ParseInt(pageNumStr, 10, 64)
+	if err != nil {
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	if pageNum < 1 {
+		ResponseErrorWithMsg(c, CodeInvalidParam, "页码不能小于1")
+		return
+	}
+	data, err := logic.GetPostList(pageSize, pageNum)
+	if err != nil {
+		zap.L().Error("GetPostDetailHandler", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
+}
