@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"hjfu/Wolverine/controllers"
 	"hjfu/Wolverine/dao/mysql"
 	"hjfu/Wolverine/dao/redis"
@@ -69,7 +70,7 @@ func main() {
 	}
 
 	// 注册路由
-	r := route.Setup()
+	r := route.Setup(gin.DebugMode)
 	// r.Run(fmt.Sprintf(":%d", viper.GetInt("app.port")))
 
 	// 启动服务 （优雅关机）

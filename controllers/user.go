@@ -88,3 +88,13 @@ func PingHandler(c *gin.Context) {
 	ResponseSuccess(c, "pong")
 
 }
+
+func CommunityHandler(c *gin.Context) {
+	data, err := logic.GetCommunityList()
+	if err != nil {
+		zap.L().Error("GetCommunityList error", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
+}

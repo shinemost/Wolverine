@@ -32,8 +32,10 @@ func Register(register *models.ParamRegister) (err error) {
 
 }
 
-func Login(login *models.ParamLogin) (string, error) {
-
+func Login(login *models.ParamLogin) (
+	string,
+	error,
+) {
 	user := models.User{
 		Username: login.UserName,
 		Password: login.Password,
@@ -42,4 +44,7 @@ func Login(login *models.ParamLogin) (string, error) {
 		return "", err
 	}
 	return jwt.GenToken(user.Username, user.UserId)
+}
+func GetCommunityList() (communityList []*models.Community, err error) {
+	return mysql.GetCommunityList()
 }

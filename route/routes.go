@@ -1,24 +1,33 @@
 package route
 
 import (
+	"github.com/gin-gonic/gin"
 	"hjfu/Wolverine/controllers"
 	"hjfu/Wolverine/logger"
 	"hjfu/Wolverine/middleware"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
-func Setup() *gin.Engine {
+// 路由
+func Setup(mode string) *gin.Engine {
+	if mode == gin.ReleaseMode {
+		gin.SetMode(mode)
+	}
+
 	r := gin.New()
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
+
+	v1 := r.Group("/api/v1")
+
 	//注册
-	r.POST("/register", controllers.RegisterHandler)
-	r.POST("/login", controllers.LoginHandler)
+	v1.POST("/register", controllers.RegisterHandler)
+	v1.POST("/login", controllers.LoginHandler)
+	v1.GET("/community", controllers.CommunityHandler)
+
+	v1.GET("/ping", middleware.JWTAuthMiddleWare(), controllers.PingHandler)
+
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "ok")
 	})
-	r.GET("/ping", middleware.JWTAuthMiddleWare(), controllers.PingHandler)
-
 	return r
 }
