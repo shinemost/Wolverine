@@ -81,5 +81,26 @@ func GetCommunityList() (communityList []*models.Community, err error) {
 		}
 	}
 	return
+}
+func GetCommunityById(id int64) (community *models.Community, err error) {
+	community = new(models.Community)
+	sqlStr := "select community_id,community_name,introduction,create_time,update_time " +
+		"from community where community_id=?"
+	err = db.Get(community, sqlStr, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			zap.L().Warn("no community")
+		}
+	}
+	return community, err
+}
 
+func InsertPost(p *models.Post) error {
+	sqlStr := "insert into post(post_id,title,content,author_id,community_id) values (?,?,?,?,?)"
+	_, err := db.Exec(sqlStr, p.Id, p.Title, p.Content, p.AuthorId, p.CommunityId)
+	if err != nil {
+		zap.L().Error("create post error", zap.Error(err))
+		return err
+	}
+	return nil
 }

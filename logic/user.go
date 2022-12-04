@@ -1,10 +1,12 @@
 package logic
 
 import (
+	"go.uber.org/zap"
 	"hjfu/Wolverine/dao/mysql"
 	"hjfu/Wolverine/models"
 	"hjfu/Wolverine/pkg/jwt"
 	"hjfu/Wolverine/pkg/snowflake"
+	"strconv"
 )
 
 func Register(register *models.ParamRegister) (err error) {
@@ -47,4 +49,18 @@ func Login(login *models.ParamLogin) (
 }
 func GetCommunityList() (communityList []*models.Community, err error) {
 	return mysql.GetCommunityList()
+}
+
+func GetCommunityById(CommunityId int64) (model *models.Community, err error) {
+	return mysql.GetCommunityById(CommunityId)
+}
+
+func CreatePost(p *models.Post) (msg string, err error) {
+	p.Id = snowflake.GenId()
+	zap.L().Debug("createPostLogic", zap.Int64("postId", p.Id))
+	err = mysql.InsertPost(p)
+	if err != nil {
+		return "failed", err
+	}
+	return strconv.FormatInt(p.Id, 10), nil
 }

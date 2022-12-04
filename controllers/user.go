@@ -5,6 +5,7 @@ import (
 	"hjfu/Wolverine/dao/mysql"
 	"hjfu/Wolverine/logic"
 	"hjfu/Wolverine/models"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -97,4 +98,48 @@ func CommunityHandler(c *gin.Context) {
 		return
 	}
 	ResponseSuccess(c, data)
+}
+
+func CommunityDetailHandler(c *gin.Context) {
+	communityIDStr := c.Param("id")
+	communityId, err := strconv.ParseInt(communityIDStr, 10, 64)
+	if err != nil {
+		zap.L().Error("GetCommunityListDetail error", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	data, err := logic.GetCommunityById(communityId)
+	if err != nil {
+		zap.L().Error("GetCommunityListDetail error", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
+}
+
+func CreatePostHandler(c *gin.Context) {
+	p := new(models.Post)
+	if err := c.ShouldBindJSON(p); err != nil {
+		zap.L().Error("CreatePostHandler error", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			ResponseError(c, CodeInvalidParam)
+		} else {
+			ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+	authorId, err := getCurrentUserId(c)
+	if err != nil {
+		ResponseError(c, CodeNoLogin)
+		return
+	}
+	p.AuthorId = authorId
+	msg, err := logic.CreatePost(p)
+	zap.L().Info("CreatePostHandlerSuccess", zap.String("postId", msg))
+	if err != nil {
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, msg)
 }
