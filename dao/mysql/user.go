@@ -90,6 +90,7 @@ func GetCommunityById(id int64) (community *models.Community, err error) {
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			zap.L().Warn("no community")
+			err = nil
 		}
 	}
 	return community, err
@@ -103,4 +104,28 @@ func InsertPost(p *models.Post) error {
 		return err
 	}
 	return nil
+}
+
+func GetPostById(id int64) (post *models.Post, err error) {
+	post = new(models.Post)
+	sqlStr := "select post_id,title,content,author_id,community_id," +
+		"status,create_time from post where post_id=?"
+	err = db.Get(post, sqlStr, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			zap.L().Warn("no post")
+			err = nil
+		}
+	}
+	return post, err
+}
+
+func GetUserNameById(id int64) (username string, err error) {
+	sqlStr := "select username from user where user_id = ?"
+	err = db.Get(&username, sqlStr, id)
+	if err != nil {
+		zap.L().Error("GetUserNameById  error", zap.Error(err))
+		return "", err
+	}
+	return username, nil
 }

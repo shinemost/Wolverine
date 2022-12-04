@@ -64,3 +64,23 @@ func CreatePost(p *models.Post) (msg string, err error) {
 	}
 	return strconv.FormatInt(p.Id, 10), nil
 }
+
+func GetPostById(postId int64) (apiPostDetail *models.ApiPostDetail, err error) {
+
+	post, err := mysql.GetPostById(postId)
+	username, err := mysql.GetUserNameById(post.AuthorId)
+	if err != nil {
+		zap.L().Warn("no author ")
+		err = nil
+	}
+	community, err := GetCommunityById(post.CommunityId)
+	if err != nil {
+		zap.L().Warn("no community ")
+		err = nil
+	}
+	apiPostDetail = new(models.ApiPostDetail)
+	apiPostDetail.AuthorName = username
+	apiPostDetail.Post = post
+	apiPostDetail.Community = community
+	return apiPostDetail, err
+}

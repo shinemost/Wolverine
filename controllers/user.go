@@ -143,3 +143,20 @@ func CreatePostHandler(c *gin.Context) {
 	}
 	ResponseSuccess(c, msg)
 }
+
+func PostDetailHandler(c *gin.Context) {
+	postIDStr := c.Param("id")
+	postId, err := strconv.ParseInt(postIDStr, 10, 64)
+	if err != nil {
+		zap.L().Error("GetPostDetail error", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	data, err := logic.GetPostById(postId)
+	if err != nil {
+		zap.L().Error("GetPostDetail error", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
+}
