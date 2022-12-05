@@ -40,6 +40,13 @@ func RegisterHandler(c *gin.Context) {
 	ResponseSuccess(c, "注册成功")
 }
 
+// LoginHandler 用户登录接口
+// @Router /api/v1/login [post]
+// @Summary 登录接口
+// @Accept application/json
+// @Produce application/json
+// @Param login body _RequestLogin true "需要上传的json"
+// @Success 200 {object} _ResponseLogin
 func LoginHandler(c *gin.Context) {
 	p := new(models.ParamLogin)
 	if err := c.ShouldBindJSON(p); err != nil {

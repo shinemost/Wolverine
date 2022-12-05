@@ -22,6 +22,9 @@ import (
 	"go.uber.org/zap"
 )
 
+// @title go语言的bbs 服务端
+// @version 1.0
+// @description go语言 初学者
 func main() {
 	filePath := ""
 	// 第二个参数 就是命令行的-x  第三个是默认值 第四个是-h的时候的说明

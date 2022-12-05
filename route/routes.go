@@ -2,7 +2,10 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	gs "github.com/swaggo/gin-swagger"
 	"hjfu/Wolverine/controllers"
+	_ "hjfu/Wolverine/docs" // 千万不要忘了导入把你上一步生成的docs
 	"hjfu/Wolverine/logger"
 	"hjfu/Wolverine/middleware"
 	"net/http"
@@ -36,5 +39,10 @@ func Setup(mode string) *gin.Engine {
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "ok")
 	})
+
+	//swagger 接口文档
+	// http://localhost:你的端口号/swagger/index.html 可以看到接口文档
+	r.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
+
 	return r
 }
