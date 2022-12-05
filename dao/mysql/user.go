@@ -5,10 +5,8 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"errors"
-	"hjfu/Wolverine/models"
-	"strconv"
-
 	"go.uber.org/zap"
+	"hjfu/Wolverine/models"
 )
 
 const serect = "wuyue.com"
@@ -71,55 +69,6 @@ func Login(user *models.User) error {
 	}
 	return nil
 }
-func GetCommunityList() (communityList []*models.Community, err error) {
-	sqlStr := "select community_id,community_name,introduction from community"
-	err = db.Select(&communityList, sqlStr)
-	if err != nil {
-		// 空数据的时候 不算错误 只是没有板块而已
-		if errors.Is(err, sql.ErrNoRows) {
-			zap.L().Warn("no community ")
-			err = nil
-		}
-	}
-	return
-}
-func GetCommunityById(id int64) (community *models.Community, err error) {
-	community = new(models.Community)
-	sqlStr := "select community_id,community_name,introduction,create_time,update_time " +
-		"from community where community_id=?"
-	err = db.Get(community, sqlStr, id)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			zap.L().Warn("no community")
-			err = nil
-		}
-	}
-	return community, err
-}
-
-func InsertPost(p *models.Post) error {
-	sqlStr := "insert into post(post_id,title,content,author_id,community_id) values (?,?,?,?,?)"
-	_, err := db.Exec(sqlStr, p.Id, p.Title, p.Content, p.AuthorId, p.CommunityId)
-	if err != nil {
-		zap.L().Error("create post error", zap.Error(err))
-		return err
-	}
-	return nil
-}
-
-func GetPostById(id int64) (post *models.Post, err error) {
-	post = new(models.Post)
-	sqlStr := "select post_id,title,content,author_id,community_id," +
-		"status,create_time from post where post_id=?"
-	err = db.Get(post, sqlStr, id)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			zap.L().Warn("no post")
-			err = nil
-		}
-	}
-	return post, err
-}
 
 func GetUserNameById(id int64) (username string, err error) {
 	sqlStr := "select username from user where user_id = ?"
@@ -129,17 +78,4 @@ func GetUserNameById(id int64) (username string, err error) {
 		return "", err
 	}
 	return username, nil
-}
-
-func GetPostList(offset int64, pageSize int64) (posts []*models.Post, err error) {
-	zap.L().Info("GetPostList", zap.String("offset", strconv.FormatInt(offset, 10)), zap.String("pageSize", strconv.FormatInt(pageSize, 10)))
-	sqlStr := "select post_id,title,content,author_id,community_id,create_time,update_time " +
-		" from post limit ?,?"
-	posts = make([]*models.Post, 0, pageSize)
-	err = db.Select(&posts, sqlStr, offset, pageSize)
-	if err != nil {
-		return nil, err
-	}
-	return posts, err
-
 }

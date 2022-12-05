@@ -28,6 +28,8 @@ func Setup(mode string) *gin.Engine {
 	v1.GET("/post/:id", controllers.PostDetailHandler)
 	v1.GET("/postList", controllers.GetPostListHandler)
 	v1.POST("/like/", middleware.JWTAuthMiddleWare(), controllers.PostLikeHandler)
+	// 最新或者最热列表
+	v1.GET("/postList2", controllers.GetPostListHandler2)
 
 	v1.GET("/ping", middleware.JWTAuthMiddleWare(), controllers.PingHandler)
 

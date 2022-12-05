@@ -54,3 +54,13 @@ func InitTrans(locale string) (err error) {
 	}
 	return err
 }
+
+// 去除报错信息中的结构体信息
+func removeTopStruct(fields map[string]string) map[string]string {
+	res := map[string]string{}
+	for field, err := range fields {
+		// 这里 算法非常简单 就是遍历你的错误信息 然后把key值取出来 把.之前的信息去掉就行了
+		res[field[strings.Index(field, ".")+1:]] = err
+	}
+	return res
+}
