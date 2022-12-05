@@ -1,6 +1,7 @@
 package route
 
 import (
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	gs "github.com/swaggo/gin-swagger"
@@ -43,6 +44,8 @@ func Setup(mode string) *gin.Engine {
 	//swagger 接口文档
 	// http://localhost:你的端口号/swagger/index.html 可以看到接口文档
 	r.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
+
+	pprof.Register(r)
 
 	return r
 }
