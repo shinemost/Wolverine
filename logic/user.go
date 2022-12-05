@@ -1,13 +1,18 @@
 package logic
 
 import (
+	"errors"
 	"go.uber.org/zap"
 	"hjfu/Wolverine/dao/mysql"
+	"hjfu/Wolverine/dao/redis"
 	"hjfu/Wolverine/models"
 	"hjfu/Wolverine/pkg/jwt"
 	"hjfu/Wolverine/pkg/snowflake"
 	"strconv"
 )
+
+var ErrAleadyLike = errors.New("不能重复点赞")
+var ErrAleadyUnLike = errors.New("不能重复点踩")
 
 func Register(register *models.ParamRegister) (err error) {
 
@@ -86,8 +91,8 @@ func GetPostById(postId int64) (apiPostDetail *models.ApiPostDetail, err error) 
 }
 
 func GetPostList(pageSize, pageNum int64) (apiPostDetailList []*models.ApiPostDetail, err error) {
-	var offset int64
-	offset = pageSize * (pageNum - 1)
+
+	offset := pageSize * (pageNum - 1)
 	postList, err := mysql.GetPostList(offset, pageSize)
 	if err != nil {
 		return nil, err
@@ -115,4 +120,27 @@ func GetPostList(pageSize, pageNum int64) (apiPostDetailList []*models.ApiPostDe
 		apiPostDetailList = append(apiPostDetailList, apiPostDetail)
 	}
 	return apiPostDetailList, nil
+}
+
+func PostLike(postData *models.ParamLikeData, userId int64) error {
+	// 查询之前有没有点过赞
+	direction, flag := redis.CheckLike(postData.PostId, userId)
+
+	if flag {
+		// 如果之前点过赞 则要判断 这次是否是重复点赞
+		if direction == postData.Direction && direction == models.DirectionLike {
+			return ErrAleadyLike
+		}
+		// 如果之前点踩 则要判断 这次是否是重复 点踩
+		if direction == postData.Direction && direction == models.DirectionUnLike {
+			return ErrAleadyUnLike
+		}
+	}
+
+	err := redis.DoLike(postData.PostId, userId, postData.Direction)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

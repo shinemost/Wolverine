@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 // 定义请求的参数结构体
 type ParamRegister struct {
@@ -44,3 +46,13 @@ type ApiPostDetail struct {
 	*Community `json:"_community"`
 	*Post      `json:"_post"`
 }
+
+type ParamLikeData struct {
+	PostId    int64 `json:"post_id,string" binding:"required"`
+	Direction int64 `json:"direction,string" binding:"required,oneof=1 -1"`
+}
+
+const (
+	DirectionLike   = 1
+	DirectionUnLike = -1
+)
