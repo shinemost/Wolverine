@@ -1,4 +1,4 @@
-FROM golang:alpine AS builder
+FROM golang:1.16-alpine3.13 AS builder
 
 LABEL maintainer="hjfu"
 
@@ -14,21 +14,19 @@ COPY go.sum .
 
 RUN go env -w GOPROXY=https://goproxy.cn,direct
 
-RUN go mod download
-
 COPY . .
 
-RUN go build -o bbs .
+RUN go build -mod=mod -o bbs .
 
-FROM alpine:3.17.0
+FROM alpine:3.13
 
-
+COPY sql/bbs/init.sql .
+COPY wait-for.sh .
 COPY configs.yaml .
-COPY --from=builder /build/bbs /
 
-ENTRYPOINT ["/bbs","configs.yaml"]
+COPY --from=builder /build/bbs .
 
-EXPOSE 8071
+RUN chmod 755 wait-for.sh bbs
 
-CMD ["/bbs"]
+
 

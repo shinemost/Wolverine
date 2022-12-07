@@ -10,15 +10,15 @@ log:
   max_age: 30
   max_backups: 7
 mysql:
-  host: mysql
+  host: mysql-test2
   port: 3306
   user: 'root'
-  password: 'password'
+  password: '123456'
   dbname: 'bbs'
   max_open_connection: 200
   max_idle_connection: 10
 redis:
-  host: some-redis
+  host: redis-test2
   passowrd: ''
   port: 6379
   db: 0

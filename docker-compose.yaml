@@ -1,0 +1,30 @@
+version: "3.7"
+services:
+  mysql-test2:
+    image: "mysql:5.7-debian"
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - "3306:3306"
+    command: "--default-authentication-plugin=mysql_native_password --init-file /data/application/init.sql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: "bbs"
+    volumes:
+      - ./sql/bbs/init.sql:/data/application/init.sql
+  redis-test2:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+  bbs_app2:
+    build: .
+    # 关键的就是在这里 确保我们的web进程 在mysql和redis启动之后
+#    command: sh -c "file /bbs"
+#    command: sh -c "/wait-for.sh mysql-test2:3306 redis-test2:6379  -- /bbs configs.yaml"
+    command: ["sh","/wait-for.sh","mysql-test2:3306","--","/bbs","configs.yaml"]
+#    command: ["/bbs","configs.yaml"]
+    depends_on:
+      - mysql-test2
+      - redis-test2
+    ports:
+      - "8071:8071"
