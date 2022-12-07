@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine3.13 AS builder
+FROM golang:alpine AS builder
 
 LABEL maintainer="hjfu"
 
@@ -20,7 +20,6 @@ RUN go build -mod=mod -o bbs .
 
 FROM alpine:3.13
 
-COPY sql/bbs/init.sql .
 COPY wait-for.sh .
 COPY configs.yaml .
 

@@ -17,7 +17,7 @@ func Close() {
 }
 
 func Init(config *domain.MysqlConfig) (err error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		config.User, config.Password,
 		config.Host, config.Port,
 		config.DbName,
