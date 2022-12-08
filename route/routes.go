@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-// 路由
+// Setup 路由
 func Setup(mode string) *gin.Engine {
 	if mode == gin.ReleaseMode {
 		gin.SetMode(mode)

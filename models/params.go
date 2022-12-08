@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// 定义请求的参数结构体
+// ParamRegister 定义请求的参数结构体
 type ParamRegister struct {
 	UserName   string `json:"username" binding:"required"`
 	Password   string `json:"password" binding:"required"`
@@ -55,9 +55,9 @@ type ParamLikeData struct {
 const (
 	DirectionLike   = 1
 	DirectionUnLike = -1
-	// 按照帖子时间排序
+	// OrderByTime 按照帖子时间排序
 	OrderByTime = "time"
-	// 按照点赞数量排序
+	// OrderByHot 按照点赞数量排序
 	OrderByHot = "hot"
 )
 

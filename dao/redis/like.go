@@ -64,7 +64,7 @@ func AddPost(postId int64) error {
 	return nil
 }
 
-// 按照点赞数 降序排列
+// GetPostIdsByScore 按照点赞数 降序排列
 func GetPostIdsByScore(pageSize int64, pageNum int64) (ids []string, err error) {
 	start := (pageNum - 1) * pageSize
 	stop := start + pageSize - 1
