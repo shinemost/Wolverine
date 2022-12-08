@@ -20,9 +20,9 @@ services:
     build: .
     # 关键的就是在这里 确保我们的web进程 在mysql和redis启动之后
 #    command: sh -c "file /bbs"
-#    command: sh -c "/wait-for.sh mysql-test2:3306 redis-test2:6379  -- /bbs configs.yaml"
-    command: ["sh","/wait-for.sh","mysql-test2:3306","--","/bbs","configs.yaml"]
-#    command: ["/bbs","configs.yaml"]
+    command: sh -c "./wait-for-it.sh mysql-test2:3306 -t 40  -- ./bbs configs.yaml"
+#    command: ["sh","/wait-for.sh","mysql-test2:3306","redis-test2:6379","--","/bbs","configs.yaml"]
+#    command: ["./wait-for-it.sh","redis-test:6379","mysql-test2:3306","--","/bbs","configs.yaml"]
     depends_on:
       - mysql-test2
       - redis-test2
