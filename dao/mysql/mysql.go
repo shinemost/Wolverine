@@ -2,12 +2,12 @@ package mysql
 
 import (
 	"fmt"
-	"hjfu/Wolverine/domain"
-
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"hjfu/Wolverine/domain"
+	"net/url"
 )
 
 var db *sqlx.DB
@@ -17,10 +17,10 @@ func Close() {
 }
 
 func Init(config *domain.MysqlConfig) (err error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&time_zone=%s",
 		config.User, config.Password,
 		config.Host, config.Port,
-		config.DbName,
+		config.DbName, url.QueryEscape("'Asia/Shanghai'"),
 	)
 	// 原生的 是open 这里直接用connect 就行了 里面包含了ping的操作
 	db, err = sqlx.Connect("mysql", dsn)

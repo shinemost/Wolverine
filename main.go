@@ -26,6 +26,7 @@ import (
 // @version 1.0
 // @description go语言 初学者
 func main() {
+	//fmt.Println(time.Now())
 	filePath := ""
 	// 第二个参数 就是命令行的-x  第三个是默认值 第四个是-h的时候的说明
 	flag.StringVar(&filePath, "file", "", "配置文件地址")
